@@ -42,9 +42,13 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        # Tenta encontrar o usuário por email ou nome de usuário
+        user = User.query.filter(
+            (User.email == form.email.data) | (User.username == form.email.data)
+        ).first()
+        
         if user is None or not user.check_password(form.password.data):
-            flash('Email ou senha inválidos', 'danger')
+            flash('Email/usuário ou senha inválidos', 'danger')
             return redirect(url_for('login'))
         
         login_user(user, remember=form.remember_me.data)
