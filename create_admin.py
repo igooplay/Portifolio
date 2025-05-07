@@ -1,6 +1,5 @@
 import os
 from app import app, db
-from werkzeug.security import generate_password_hash
 from models import User
 
 # Executar dentro do contexto da aplicação
@@ -13,11 +12,12 @@ with app.app_context():
         admin = User(
             username="admin",
             email="admin@seucodigo.com.br",
-            password_hash=generate_password_hash("admin123"),
             name="Administrador",
             bio="Administrador do sistema SeuCodigo.",
             is_admin=True
         )
+        # Usar o método set_password para garantir a correta geração do hash
+        admin.set_password("admin123")
         
         db.session.add(admin)
         db.session.commit()
@@ -28,6 +28,11 @@ with app.app_context():
             admin.is_admin = True
             db.session.commit()
             print("Flag de admin atualizada para o usuário admin.")
+        
+        # Reset de senha do admin para garantir que está funcionando
+        admin.set_password("admin123")
+        db.session.commit()
+        print("Senha do admin resetada para 'admin123'.")
         
         print("Usuário admin já existe.")
         print(f"Username: {admin.username}")
