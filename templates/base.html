@@ -8,10 +8,47 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
@@ -21,24 +58,26 @@
     
     {% block head %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="dark min-h-screen flex flex-col bg-dark-900 text-gray-100 font-sans">
     <!-- Header/Navigation -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-dark-800 sticky top-0 z-50 border-b border-dark-700/50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{{ url_for('index') }}" class="text-indigo-600 font-bold text-xl lg:text-2xl">
-                        <span class="text-gray-900">Seu</span>Codigo
+                    <a href="{{ url_for('index') }}" class="text-2xl font-bold">
+                        <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
                     </a>
                 </div>
                 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8">
-                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Home</a>
-                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Projetos</a>
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Início</a>
                     <a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' %}active-nav-link{% endif %}">Serviços</a>
+                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Portfólio</a>
                     <a href="{{ url_for('testimonials') }}" class="nav-link {% if request.endpoint == 'testimonials' %}active-nav-link{% endif %}">Depoimentos</a>
+                    <a href="#" class="nav-link">Contato</a>
+                    
                     {% if current_user.is_authenticated %}
                         <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active-nav-link{% endif %}">Chat</a>
                         {% if current_user.is_admin %}
@@ -48,16 +87,23 @@
                             <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active-nav-link{% endif %}">
                                 {{ current_user.username }}
                             </a>
-                            <a href="{{ url_for('logout') }}" class="text-sm text-red-500 hover:text-red-700 absolute -bottom-6 left-0">Sair</a>
+                            <a href="{{ url_for('logout') }}" class="text-sm text-red-400 hover:text-red-300 absolute -bottom-6 left-0">Sair</a>
                         </div>
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="btn btn-primary py-1 px-3">Login</a>
+                        <a href="{{ url_for('login') }}" class="btn-primary px-6 py-2">Entrar</a>
                     {% endif %}
                 </nav>
                 
+                <!-- Theme Toggle -->
+                <button class="p-1 rounded-full text-gray-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                
                 <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                <div class="md:hidden ml-3">
+                    <button id="mobile-menu-button" class="text-gray-400 hover:text-white focus:outline-none">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -67,20 +113,22 @@
             
             <!-- Mobile Navigation -->
             <div id="mobile-menu" class="md:hidden hidden pb-4">
-                <div class="flex flex-col space-y-3">
-                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Home</a>
-                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Projetos</a>
+                <div class="flex flex-col space-y-4">
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Início</a>
                     <a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' %}active-nav-link{% endif %}">Serviços</a>
+                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Portfólio</a>
                     <a href="{{ url_for('testimonials') }}" class="nav-link {% if request.endpoint == 'testimonials' %}active-nav-link{% endif %}">Depoimentos</a>
+                    <a href="#" class="nav-link">Contato</a>
+                    
                     {% if current_user.is_authenticated %}
                         <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active-nav-link{% endif %}">Chat</a>
                         {% if current_user.is_admin %}
                             <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if 'admin' in request.endpoint %}active-nav-link{% endif %}">Admin</a>
                         {% endif %}
                         <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active-nav-link{% endif %}">Perfil</a>
-                        <a href="{{ url_for('logout') }}" class="text-red-500 hover:text-red-700">Sair</a>
+                        <a href="{{ url_for('logout') }}" class="text-red-400 hover:text-red-300">Sair</a>
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="btn btn-primary w-full text-center">Login</a>
+                        <a href="{{ url_for('login') }}" class="btn-primary w-full text-center py-2">Entrar</a>
                     {% endif %}
                 </div>
             </div>
@@ -92,7 +140,7 @@
         {% if messages %}
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-4">
                 {% for category, message in messages %}
-                    <div class="flash-message bg-{{ category if category != 'message' else 'blue' }}-100 border-l-4 border-{{ category if category != 'message' else 'blue' }}-500 text-{{ category if category != 'message' else 'blue' }}-700 p-4 mb-4 rounded shadow transition-opacity duration-500">
+                    <div class="flash-message bg-{{ category if category != 'message' else 'blue' }}-500/20 border-l-4 border-{{ category if category != 'message' else 'blue' }}-500 text-{{ category if category != 'message' else 'blue' }}-300 p-4 mb-4 rounded shadow transition-opacity duration-500">
                         <p>{{ message }}</p>
                     </div>
                 {% endfor %}
@@ -110,13 +158,18 @@
         <i class="fab fa-whatsapp text-2xl"></i>
     </a>
 
+    <!-- Chat Button -->
+    <button id="chat-btn" class="fixed bottom-[25px] right-[100px] w-14 h-14 bg-primary-500 hover:bg-primary-600 text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-all duration-300 z-50">
+        <i class="far fa-comment-dots text-2xl"></i>
+    </button>
+
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 mt-12">
+    <footer class="bg-dark-800 border-t border-dark-700/50 py-10 mt-20">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- About -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">SeuCodigo</h3>
+                    <h3 class="text-xl font-bold mb-4 font-heading"><span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span></h3>
                     <p class="text-gray-400">
                         Soluções profissionais em desenvolvimento web e design para alavancar seu negócio digital.
                     </p>
@@ -138,41 +191,41 @@
                 
                 <!-- Quick Links -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Links Rápidos</h3>
+                    <h3 class="text-xl font-bold mb-4 font-heading">Links Rápidos</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ url_for('index') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Home</a></li>
-                        <li><a href="{{ url_for('projects') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Projetos</a></li>
-                        <li><a href="{{ url_for('services') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Serviços</a></li>
-                        <li><a href="{{ url_for('testimonials') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Depoimentos</a></li>
+                        <li><a href="{{ url_for('index') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Início</a></li>
+                        <li><a href="{{ url_for('services') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Serviços</a></li>
+                        <li><a href="{{ url_for('projects') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Portfólio</a></li>
+                        <li><a href="{{ url_for('testimonials') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Depoimentos</a></li>
                         {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('chat') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Chat</a></li>
+                            <li><a href="{{ url_for('chat') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Chat</a></li>
                         {% else %}
-                            <li><a href="{{ url_for('login') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Login</a></li>
+                            <li><a href="{{ url_for('login') }}" class="text-gray-400 hover:text-primary-400 transition-colors duration-300">Entrar</a></li>
                         {% endif %}
                     </ul>
                 </div>
                 
                 <!-- Contact -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Contato</h3>
+                    <h3 class="text-xl font-bold mb-4 font-heading">Contato</h3>
                     <ul class="space-y-2">
                         <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-indigo-500"></i>
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary-500"></i>
                             <span class="text-gray-400">São Paulo, SP - Brasil</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-envelope mt-1 mr-3 text-indigo-500"></i>
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary-500"></i>
                             <span class="text-gray-400">contato@seucodigo.com.br</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-phone-alt mt-1 mr-3 text-indigo-500"></i>
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary-500"></i>
                             <span class="text-gray-400">+55 (11) 99999-9999</span>
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <div class="border-t border-dark-700 mt-8 pt-8 text-center text-gray-400">
                 <p>&copy; 2025 SeuCodigo. Todos os direitos reservados.</p>
             </div>
         </div>
