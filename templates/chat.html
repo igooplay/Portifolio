@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - SeuCodigo{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4 bg-indigo-600 text-white flex items-center">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-indigo-600 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Chat com Suporte</h2>
+                        <p class="text-sm text-indigo-200">Conversando com {{ admin.username }}</p>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-container p-4" data-current-user="{{ current_user.id }}">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="chat-message {% if message.sender_id == current_user.id %}chat-message-user{% else %}chat-message-admin{% endif %}">
+                                <div class="mb-1 font-bold">{% if message.sender_id == current_user.id %}Você{% else %}{{ admin.username }}{% endif %}</div>
+                                <div>{{ message.content }}</div>
+                                <div class="text-xs text-right mt-1 opacity-75">{{ message.timestamp.strftime('%H:%M') }}</div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 mx-auto mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <p class="text-gray-600">Nenhuma mensagem ainda. Comece a conversar!</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Chat Input Form -->
+                <div class="border-t p-4">
+                    <form id="message-form" method="POST" action="{{ url_for('chat') }}">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" id="partner-id" value="{{ admin.id }}">
+                        <div class="flex">
+                            {{ form.content(class="flex-grow form-input rounded-r-none", placeholder="Digite sua mensagem...", autocomplete="off") }}
+                            {{ form.submit(class="btn btn-primary rounded-l-none") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Support Information -->
+            <div class="mt-8 bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="py-6 px-8">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Outros meios de contato</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="#" id="whatsapp-btn-chat" data-phone="5500000000000" class="flex items-center p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors duration-300">
+                            <i class="fab fa-whatsapp text-2xl mr-3"></i>
+                            <div>
+                                <h4 class="font-bold">WhatsApp</h4>
+                                <p class="text-sm">Fale conosco por WhatsApp</p>
+                            </div>
+                        </a>
+                        <a href="mailto:contato@seucodigo.com.br" class="flex items-center p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors duration-300">
+                            <i class="fas fa-envelope text-2xl mr-3"></i>
+                            <div>
+                                <h4 class="font-bold">Email</h4>
+                                <p class="text-sm">contato@seucodigo.com.br</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const whatsappBtnChat = document.getElementById('whatsapp-btn-chat');
+        if (whatsappBtnChat) {
+            whatsappBtnChat.addEventListener('click', function(e) {
+                e.preventDefault();
+                const phoneNumber = whatsappBtnChat.dataset.phone || '5500000000000';
+                const message = encodeURIComponent('Olá! Vim do seu site e gostaria de mais informações.');
+                window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+            });
+        }
+    });
+</script>
+{% endblock %}

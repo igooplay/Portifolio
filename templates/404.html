@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada - SeuCodigo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div class="flex-grow flex flex-col items-center justify-center text-center px-4">
+        <div class="max-w-md">
+            <!-- SVG Error Illustration -->
+            <div class="mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="w-64 h-auto mx-auto">
+                    <rect x="50" y="50" width="300" height="120" rx="10" fill="#4F46E5" opacity="0.1" />
+                    <text x="200" y="130" font-family="Arial" font-size="72" fill="#4F46E5" font-weight="bold" text-anchor="middle">404</text>
+                    <path d="M160 180 L200 220 L240 180" stroke="#4F46E5" stroke-width="5" fill="none" />
+                </svg>
+            </div>
+            
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Página Não Encontrada</h1>
+            <p class="text-lg text-gray-600 mb-8">
+                A página que você está procurando não existe ou foi movida para outro endereço.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="/" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    <i class="fas fa-home mr-2"></i> Voltar para a Home
+                </a>
+                <button onclick="history.back()" class="btn bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Simple Footer -->
+    <footer class="py-8 text-center">
+        <div class="container mx-auto">
+            <a href="/" class="text-indigo-600 font-bold text-xl">
+                <span class="text-gray-900">Seu</span>Codigo
+            </a>
+            <p class="text-gray-600 text-sm mt-2">
+                &copy; 2025 SeuCodigo. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

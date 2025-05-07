@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Depoimentos - SeuCodigo{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<section class="bg-indigo-800 text-white py-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold mb-2">Gerenciar Depoimentos</h1>
+        <p class="text-indigo-200">Adicione, edite e remova depoimentos de clientes.</p>
+    </div>
+</section>
+
+<!-- Admin Navigation -->
+<section class="bg-gray-100 border-b">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex overflow-x-auto py-4 whitespace-nowrap">
+            <a href="{{ url_for('admin_dashboard') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Dashboard</a>
+            <a href="{{ url_for('admin_projects') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Projetos</a>
+            <a href="{{ url_for('admin_services') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Serviços</a>
+            <a href="{{ url_for('admin_testimonials') }}" class="px-4 py-2 mx-1 rounded-md bg-indigo-600 text-white font-medium">Depoimentos</a>
+            <a href="{{ url_for('admin_chats') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">
+                Conversas
+                {% if users_with_messages|default([])|length > 0 %}
+                <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                    {{ users_with_messages|length }}
+                </span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Content -->
+<section class="py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Testimonial Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="border-b px-6 py-4">
+                        <h2 class="font-bold text-lg">
+                            {% if edit_mode %}Editar Depoimento{% else %}Adicionar Novo Depoimento{% endif %}
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <form method="POST" action="{% if edit_mode %}{{ url_for('edit_testimonial', id=testimonial.id) }}{% else %}{{ url_for('admin_testimonials') }}{% endif %}">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-4 form-group">
+                                {{ form.client_name.label(class="form-label") }}
+                                {{ form.client_name(class="form-input", placeholder="Nome do cliente") }}
+                                {% if form.client_name.errors %}
+                                    {% for error in form.client_name.errors %}
+                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="mb-4 form-group">
+                                {{ form.content.label(class="form-label") }}
+                                {{ form.content(class="form-input", rows=6, placeholder="Texto do depoimento") }}
+                                {% if form.content.errors %}
+                                    {% for error in form.content.errors %}
+                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="mb-4 form-group">
+                                    {{ form.company.label(class="form-label") }}
+                                    {{ form.company(class="form-input", placeholder="Empresa do cliente") }}
+                                    {% if form.company.errors %}
+                                        {% for error in form.company.errors %}
+                                            <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="mb-4 form-group">
+                                    {{ form.position.label(class="form-label") }}
+                                    {{ form.position(class="form-input", placeholder="Cargo do cliente") }}
+                                    {% if form.position.errors %}
+                                        {% for error in form.position.errors %}
+                                            <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mb-6 form-group">
+                                {{ form.rating.label(class="form-label") }}
+                                {{ form.rating(class="form-input", placeholder="Nota de 1 a 5") }}
+                                {% if form.rating.errors %}
+                                    {% for error in form.rating.errors %}
+                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="flex items-center mt-2">
+                                    <div class="rating-preview flex">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-500">Avaliação visual</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                {% if edit_mode %}
+                                    <a href="{{ url_for('admin_testimonials') }}" class="btn btn-secondary">Cancelar</a>
+                                    {{ form.submit(class="btn btn-primary", value="Atualizar Depoimento") }}
+                                {% else %}
+                                    {{ form.submit(class="btn btn-primary w-full") }}
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonials List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="border-b px-6 py-4 flex justify-between items-center">
+                        <h2 class="font-bold text-lg">Depoimentos Cadastrados</h2>
+                        <span class="text-gray-500 text-sm">Total: {{ testimonials|length }}</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        {% if testimonials %}
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Cliente
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                                            Depoimento
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Avaliação
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ações
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for testimonial in testimonials %}
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">{{ testimonial.client_name }}</div>
+                                                <div class="text-xs text-gray-500">
+                                                    {% if testimonial.position and testimonial.company %}
+                                                        {{ testimonial.position }} em {{ testimonial.company }}
+                                                    {% elif testimonial.company %}
+                                                        {{ testimonial.company }}
+                                                    {% elif testimonial.position %}
+                                                        {{ testimonial.position }}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 hidden md:table-cell">
+                                                <div class="text-sm text-gray-500 line-clamp-2">{{ testimonial.content|truncate(100) }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex text-yellow-400">
+                                                    {% for i in range(testimonial.rating) %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% endfor %}
+                                                    {% for i in range(5 - testimonial.rating) %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="{{ url_for('edit_testimonial', id=testimonial.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</a>
+                                                <form action="{{ url_for('delete_testimonial', id=testimonial.id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este depoimento?');">
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Excluir</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="text-center py-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                </svg>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhum depoimento cadastrado</h3>
+                                <p class="text-gray-500">Adicione seu primeiro depoimento usando o formulário.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Testimonials page specific JavaScript
+        const ratingInput = document.getElementById('rating');
+        const ratingStars = document.querySelectorAll('.rating-preview i');
+        
+        if (ratingInput && ratingStars.length > 0) {
+            // Update stars based on input value
+            const updateStars = function() {
+                const rating = parseInt(ratingInput.value) || 5;
+                for (let i = 0; i < ratingStars.length; i++) {
+                    if (i < rating) {
+                        ratingStars[i].className = 'fas fa-star text-yellow-400';
+                    } else {
+                        ratingStars[i].className = 'far fa-star text-yellow-400';
+                    }
+                }
+            };
+            
+            // Initial update
+            updateStars();
+            
+            // Update on input change
+            ratingInput.addEventListener('input', updateStars);
+        }
+    });
+</script>
+{% endblock %}

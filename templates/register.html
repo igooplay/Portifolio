@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar - SeuCodigo{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="py-6 px-8">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Criar Conta</h2>
+                <form method="POST" action="{{ url_for('register') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-4 form-group">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-input", placeholder="Nome de usuário") }}
+                        {% if form.username.errors %}
+                            {% for error in form.username.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-4 form-group">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-input", placeholder="seu@email.com") }}
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-4 form-group">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-input", placeholder="Crie uma senha forte") }}
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-6 form-group">
+                        {{ form.password2.label(class="form-label") }}
+                        {{ form.password2(class="form-input", placeholder="Repita a senha") }}
+                        {% if form.password2.errors %}
+                            {% for error in form.password2.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-6">
+                        {{ form.submit(class="btn btn-primary w-full") }}
+                    </div>
+                </form>
+                <div class="text-center">
+                    <p class="text-gray-600">
+                        Já tem uma conta? 
+                        <a href="{{ url_for('login') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Faça login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

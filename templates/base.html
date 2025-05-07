@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SeuCodigo - Portfólio profissional de desenvolvimento web e soluções digitais">
+    <title>{% block title %}SeuCodigo - Portfólio Profissional{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>">
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header/Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('index') }}" class="text-indigo-600 font-bold text-xl lg:text-2xl">
+                        <span class="text-gray-900">Seu</span>Codigo
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Home</a>
+                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Projetos</a>
+                    <a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' %}active-nav-link{% endif %}">Serviços</a>
+                    <a href="{{ url_for('testimonials') }}" class="nav-link {% if request.endpoint == 'testimonials' %}active-nav-link{% endif %}">Depoimentos</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active-nav-link{% endif %}">Chat</a>
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if 'admin' in request.endpoint %}active-nav-link{% endif %}">Admin</a>
+                        {% endif %}
+                        <div class="relative inline-block">
+                            <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active-nav-link{% endif %}">
+                                {{ current_user.username }}
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="text-sm text-red-500 hover:text-red-700 absolute -bottom-6 left-0">Sair</a>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-primary py-1 px-3">Login</a>
+                    {% endif %}
+                </nav>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active-nav-link{% endif %}">Home</a>
+                    <a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' %}active-nav-link{% endif %}">Projetos</a>
+                    <a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' %}active-nav-link{% endif %}">Serviços</a>
+                    <a href="{{ url_for('testimonials') }}" class="nav-link {% if request.endpoint == 'testimonials' %}active-nav-link{% endif %}">Depoimentos</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('chat') }}" class="nav-link {% if request.endpoint == 'chat' %}active-nav-link{% endif %}">Chat</a>
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if 'admin' in request.endpoint %}active-nav-link{% endif %}">Admin</a>
+                        {% endif %}
+                        <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active-nav-link{% endif %}">Perfil</a>
+                        <a href="{{ url_for('logout') }}" class="text-red-500 hover:text-red-700">Sair</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-primary w-full text-center">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                {% for category, message in messages %}
+                    <div class="flash-message bg-{{ category if category != 'message' else 'blue' }}-100 border-l-4 border-{{ category if category != 'message' else 'blue' }}-500 text-{{ category if category != 'message' else 'blue' }}-700 p-4 mb-4 rounded shadow transition-opacity duration-500">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- WhatsApp Floating Button -->
+    <a id="whatsapp-btn" data-phone="5500000000000" class="whatsapp-btn w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-all duration-300">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- About -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">SeuCodigo</h3>
+                    <p class="text-gray-400">
+                        Soluções profissionais em desenvolvimento web e design para alavancar seu negócio digital.
+                    </p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{{ url_for('index') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="{{ url_for('projects') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Projetos</a></li>
+                        <li><a href="{{ url_for('services') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Serviços</a></li>
+                        <li><a href="{{ url_for('testimonials') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Depoimentos</a></li>
+                        {% if current_user.is_authenticated %}
+                            <li><a href="{{ url_for('chat') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Chat</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('login') }}" class="text-gray-400 hover:text-white transition-colors duration-300">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contato</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-indigo-500"></i>
+                            <span class="text-gray-400">São Paulo, SP - Brasil</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-indigo-500"></i>
+                            <span class="text-gray-400">contato@seucodigo.com.br</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-indigo-500"></i>
+                            <span class="text-gray-400">+55 (11) 99999-9999</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 SeuCodigo. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
