@@ -472,11 +472,10 @@ def admin_chats():
         messages = []
     
     return render_template('admin/chats.html', 
-                          title='Gerenciar Conversas - SeuCodigo',
-                          users=users,
-                          selected_user=selected_user,
-                          messages=messages,
-                          form=ChatMessageForm())
+                          title='Gerenciar Mensagens - SeuCodigo',
+                          users_with_messages=users,
+                          current_chat_user=selected_user,
+                          messages=messages)
 
 # Error handlers
 @app.errorhandler(404)
