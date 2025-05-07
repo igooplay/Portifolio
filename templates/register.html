@@ -3,60 +3,104 @@
 {% block title %}Registrar - SeuCodigo{% endblock %}
 
 {% block content %}
-<section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="py-6 px-8">
-                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Criar Conta</h2>
-                <form method="POST" action="{{ url_for('register') }}">
-                    {{ form.hidden_tag() }}
-                    <div class="mb-4 form-group">
-                        {{ form.username.label(class="form-label") }}
-                        {{ form.username(class="form-input", placeholder="Nome de usuário") }}
-                        {% if form.username.errors %}
-                            {% for error in form.username.errors %}
-                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-4 form-group">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-input", placeholder="seu@email.com") }}
-                        {% if form.email.errors %}
-                            {% for error in form.email.errors %}
-                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-4 form-group">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-input", placeholder="Crie uma senha forte") }}
-                        {% if form.password.errors %}
-                            {% for error in form.password.errors %}
-                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-6 form-group">
-                        {{ form.password2.label(class="form-label") }}
-                        {{ form.password2(class="form-input", placeholder="Repita a senha") }}
-                        {% if form.password2.errors %}
-                            {% for error in form.password2.errors %}
-                                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="mb-6">
-                        {{ form.submit(class="btn btn-primary w-full") }}
-                    </div>
-                </form>
-                <div class="text-center">
-                    <p class="text-gray-600">
-                        Já tem uma conta? 
-                        <a href="{{ url_for('login') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Faça login</a>
-                    </p>
-                </div>
+<section class="min-h-screen flex md:flex-row flex-col">
+    <!-- Left Side - Register Form -->
+    <div class="md:w-1/2 w-full flex flex-col justify-center px-8 md:px-16 py-12">
+        <!-- Login/Register Tabs -->
+        <div class="flex gap-4 mb-8 text-gray-400">
+            <a href="{{ url_for('login') }}" class="py-2 px-4 flex-grow text-center hover:bg-dark-800 rounded-md font-medium">Entrar</a>
+            <a href="{{ url_for('register') }}" class="py-2 px-4 flex-grow text-center bg-dark-800 rounded-md font-medium">Registrar</a>
+        </div>
+        
+        <!-- Register Form -->
+        <form method="POST" action="{{ url_for('register') }}" class="space-y-5">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id }}" class="text-gray-300 block mb-2">Nome Completo</label>
+                {{ form.username(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite seu nome completo") }}
+                {% if form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
             </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id }}" class="text-gray-300 block mb-2">Email</label>
+                {{ form.email(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite seu email") }}
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.username.id }}" class="text-gray-300 block mb-2">Nome de Usuário</label>
+                <input type="text" class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500" placeholder="Escolha um nome de usuário">
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password.id }}" class="text-gray-300 block mb-2">Senha</label>
+                {{ form.password(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Escolha uma senha") }}
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password2.id }}" class="text-gray-300 block mb-2">Confirmar Senha</label>
+                {{ form.password2(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Confirme sua senha") }}
+                {% if form.password2.errors %}
+                    {% for error in form.password2.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out">
+                Criar Conta
+            </button>
+        </form>
+    </div>
+    
+    <!-- Right Side - Hero Message -->
+    <div class="md:w-1/2 w-full bg-primary-500 flex flex-col justify-center px-8 md:px-16 py-12">
+        <div class="max-w-lg mx-auto">
+            <h2 class="text-3xl font-bold text-white mb-6">Desenvolva seu Potencial Digital</h2>
+            <p class="text-white mb-8">
+                Faça login ou crie uma conta para acessar todos os recursos e transformar suas ideias em código. Oferecemos soluções personalizadas para o seu negócio digital.
+            </p>
+            
+            <ul class="space-y-4">
+                <li class="flex items-center text-white">
+                    <div class="rounded-full bg-primary-400/20 p-1 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    Desenvolvimento Web Profissional
+                </li>
+                <li class="flex items-center text-white">
+                    <div class="rounded-full bg-primary-400/20 p-1 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    Aplicações Responsivas
+                </li>
+                <li class="flex items-center text-white">
+                    <div class="rounded-full bg-primary-400/20 p-1 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    Suporte Dedicado
+                </li>
+            </ul>
         </div>
     </div>
 </section>
