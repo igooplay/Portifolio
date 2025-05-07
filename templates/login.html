@@ -19,8 +19,8 @@
             {{ form.hidden_tag() }}
             
             <div class="form-group">
-                <label for="{{ form.email.id }}" class="text-gray-300 block mb-2">Nome de Usuário</label>
-                {{ form.email(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite seu nome de usuário") }}
+                {{ form.email.label(class="text-gray-300 block mb-2") }}
+                {{ form.email(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="seu@email.com") }}
                 {% if form.email.errors %}
                     {% for error in form.email.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -29,8 +29,8 @@
             </div>
             
             <div class="form-group">
-                <label for="{{ form.password.id }}" class="text-gray-300 block mb-2">Senha</label>
-                {{ form.password(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite sua senha") }}
+                {{ form.password.label(class="text-gray-300 block mb-2") }}
+                {{ form.password(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Sua senha") }}
                 {% if form.password.errors %}
                     {% for error in form.password.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -43,9 +43,7 @@
                 {{ form.remember_me.label(class="text-gray-400") }}
             </div>
             
-            <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out">
-                Entrar
-            </button>
+            {{ form.submit(class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out") }}
         </form>
     </div>
     

@@ -17,8 +17,8 @@
             {{ form.hidden_tag() }}
             
             <div class="form-group">
-                <label for="{{ form.username.id }}" class="text-gray-300 block mb-2">Nome Completo</label>
-                {{ form.username(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite seu nome completo") }}
+                {{ form.username.label(class="text-gray-300 block mb-2") }}
+                {{ form.username(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Nome de usuário") }}
                 {% if form.username.errors %}
                     {% for error in form.username.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -27,8 +27,8 @@
             </div>
             
             <div class="form-group">
-                <label for="{{ form.email.id }}" class="text-gray-300 block mb-2">Email</label>
-                {{ form.email(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Digite seu email") }}
+                {{ form.email.label(class="text-gray-300 block mb-2") }}
+                {{ form.email(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="seu@email.com") }}
                 {% if form.email.errors %}
                     {% for error in form.email.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -37,13 +37,8 @@
             </div>
             
             <div class="form-group">
-                <label for="{{ form.username.id }}" class="text-gray-300 block mb-2">Nome de Usuário</label>
-                <input type="text" class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500" placeholder="Escolha um nome de usuário">
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.password.id }}" class="text-gray-300 block mb-2">Senha</label>
-                {{ form.password(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Escolha uma senha") }}
+                {{ form.password.label(class="text-gray-300 block mb-2") }}
+                {{ form.password(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Crie uma senha forte") }}
                 {% if form.password.errors %}
                     {% for error in form.password.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -52,8 +47,8 @@
             </div>
             
             <div class="form-group">
-                <label for="{{ form.password2.id }}" class="text-gray-300 block mb-2">Confirmar Senha</label>
-                {{ form.password2(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Confirme sua senha") }}
+                {{ form.password2.label(class="text-gray-300 block mb-2") }}
+                {{ form.password2(class="w-full bg-dark-900 border border-dark-700 rounded-md py-3 px-4 text-gray-300 focus:ring-primary-500 focus:border-primary-500", placeholder="Repita a senha") }}
                 {% if form.password2.errors %}
                     {% for error in form.password2.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ error }}</p>
@@ -61,9 +56,7 @@
                 {% endif %}
             </div>
             
-            <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out">
-                Criar Conta
-            </button>
+            {{ form.submit(class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out") }}
         </form>
     </div>
     
