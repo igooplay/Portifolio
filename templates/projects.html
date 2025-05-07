@@ -4,74 +4,118 @@
 
 {% block content %}
 <!-- Header Section -->
-<section class="py-20 bg-indigo-600 text-white">
+<section class="pt-16 pb-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl font-bold mb-4">Projetos</h1>
-        <p class="text-xl text-indigo-100 max-w-2xl mx-auto">
-            Conheça alguns dos nossos trabalhos mais recentes e descubra como podemos trazer soluções criativas para o seu negócio.
+        <h1 class="text-4xl font-bold text-white mb-4">Meus Projetos</h1>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+            Confira alguns dos meus trabalhos mais recentes. Cada projeto é único e desenvolvido com atenção aos detalhes.
         </p>
     </div>
 </section>
 
-<!-- Projects Grid -->
-<section class="py-20 bg-gray-50">
+<!-- Project Filter -->
+<section class="py-6">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="flex justify-center space-x-2">
+            <button class="bg-dark-900 text-white px-4 py-2 rounded-full text-sm">Todos</button>
+            <button class="bg-dark-800 text-gray-400 hover:text-white px-4 py-2 rounded-full text-sm">Web</button>
+            <button class="bg-dark-800 text-gray-400 hover:text-white px-4 py-2 rounded-full text-sm">Mobile</button>
+            <button class="bg-dark-800 text-gray-400 hover:text-white px-4 py-2 rounded-full text-sm">UI/UX</button>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="py-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {% for project in projects %}
-                <div id="project-{{ project.id }}" class="bg-white rounded-lg overflow-hidden shadow-md project-card animate-on-scroll" data-animation="fade-in">
+                <div class="group relative overflow-hidden rounded-lg">
                     {% if project.image_url %}
-                        <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                            <img src="{{ project.image_url }}" alt="{{ project.title }}" class="w-full h-full object-cover">
-                        </div>
+                        <img src="{{ project.image_url }}" alt="{{ project.title }}" class="w-full h-64 object-cover object-center transition duration-300 ease-in-out group-hover:scale-110">
                     {% else %}
-                        <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                        <div class="w-full h-64 bg-dark-700 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-gray-600"></i>
                         </div>
                     {% endif %}
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">{{ project.title }}</h3>
-                        <p class="text-gray-600 mb-4">{{ project.description }}</p>
-                        
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">{{ project.title }}</h3>
+                        <p class="text-gray-300 text-sm mb-4 line-clamp-2">{{ project.description }}</p>
                         {% if project.link %}
-                            <a href="{{ project.link }}" target="_blank" class="btn btn-primary w-full text-center">
-                                Visitar Projeto <i class="fas fa-external-link-alt ml-2"></i>
+                            <a href="{{ project.link }}" target="_blank" class="text-primary-400 hover:text-primary-300 text-sm inline-flex items-center">
+                                Ver projeto <i class="fas fa-arrow-right ml-2"></i>
                             </a>
                         {% endif %}
                     </div>
                 </div>
             {% else %}
-                <div class="col-span-3 text-center py-16">
-                    <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 mx-auto mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
+                <div class="col-span-3 flex flex-col items-center justify-center py-16">
+                    <div class="w-20 h-20 bg-dark-700 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-folder-open text-gray-500 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Nenhum projeto disponível</h3>
-                    <p class="text-gray-600 mb-6">Estamos trabalhando em novos projetos para mostrar em breve.</p>
+                    <h3 class="text-xl font-bold text-white mb-2">Nenhum projeto disponível</h3>
+                    <p class="text-gray-400">Estamos trabalhando em novos projetos para mostrar em breve.</p>
                 </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
+<!-- Sample Projects -->
+<section class="py-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Project 1 -->
+            <div class="group relative overflow-hidden rounded-lg">
+                <img src="https://via.placeholder.com/600x400/1e293b/ffffff?text=E-commerce+Website" alt="E-commerce Website" class="w-full h-64 object-cover object-center transition duration-300 ease-in-out group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">E-commerce Website</h3>
+                    <p class="text-gray-300 text-sm mb-4">Loja virtual completa com sistema de pagamentos.</p>
+                    <a href="#" class="text-primary-400 hover:text-primary-300 text-sm inline-flex items-center">
+                        Ver projeto <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Project 2 -->
+            <div class="group relative overflow-hidden rounded-lg">
+                <img src="https://via.placeholder.com/600x400/1e293b/ffffff?text=Dashboard+Analytics" alt="Dashboard Analytics" class="w-full h-64 object-cover object-center transition duration-300 ease-in-out group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">Dashboard Analytics</h3>
+                    <p class="text-gray-300 text-sm mb-4">Dashboard interativo para visualização de dados e relatórios analíticos.</p>
+                    <a href="#" class="text-primary-400 hover:text-primary-300 text-sm inline-flex items-center">
+                        Ver projeto <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Project 3 -->
+            <div class="group relative overflow-hidden rounded-lg">
+                <img src="https://via.placeholder.com/600x400/1e293b/ffffff?text=Quiz+App" alt="Quiz App" class="w-full h-64 object-cover object-center transition duration-300 ease-in-out group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">Quiz</h3>
+                    <p class="text-gray-300 text-sm mb-4">Jogo de perguntas e respostas com sistema de ranking.</p>
+                    <a href="#" class="text-primary-400 hover:text-primary-300 text-sm inline-flex items-center">
+                        Ver projeto <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
-<section class="py-16 bg-indigo-600 text-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-6">Pronto para criar seu próprio projeto?</h2>
-        <p class="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-            Entre em contato conosco para discutir suas necessidades e transformar suas ideias em realidade.
-        </p>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('chat') }}" class="btn bg-white text-indigo-600 hover:bg-gray-100 focus:ring-white btn-primary-hover">
-                Iniciar Chat
+<section class="py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-8 text-center">
+            <h2 class="text-2xl font-bold text-white mb-4">Tem um projeto em mente?</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+                Entre em contato para discutirmos suas ideias e transformá-las em realidade.
+            </p>
+            <a href="#" class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition duration-200 ease-in-out inline-block">
+                Fale Comigo
             </a>
-        {% else %}
-            <a href="{{ url_for('register') }}" class="btn bg-white text-indigo-600 hover:bg-gray-100 focus:ring-white btn-primary-hover">
-                Registre-se Agora
-            </a>
-        {% endif %}
+        </div>
     </div>
 </section>
 {% endblock %}

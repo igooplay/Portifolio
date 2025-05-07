@@ -4,114 +4,153 @@
 
 {% block content %}
 <!-- Header Section -->
-<section class="py-20 bg-indigo-600 text-white">
+<section class="pt-16 pb-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl font-bold mb-4">Depoimentos de Clientes</h1>
-        <p class="text-xl text-indigo-100 max-w-2xl mx-auto">
-            Veja o que nossos clientes têm a dizer sobre nossas soluções e atendimento.
+        <h1 class="text-4xl font-bold text-white mb-4">Depoimentos</h1>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+            Veja o que meus clientes têm a dizer sobre meus serviços e como minhas soluções impactaram seus negócios.
         </p>
     </div>
 </section>
 
 <!-- Testimonials Grid -->
-<section class="py-20 bg-gray-50">
+<section class="py-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {% for testimonial in testimonials %}
-                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 testimonial-card animate-on-scroll" data-animation="fade-in">
+                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
+                        <img src="https://randomuser.me/api/portraits/women/{{ loop.index0 }}.jpg" alt="{{ testimonial.client_name }}" class="w-12 h-12 rounded-full object-cover">
                         <div class="ml-4">
-                            <h4 class="font-bold">{{ testimonial.client_name }}</h4>
+                            <h4 class="font-bold text-white">{{ testimonial.client_name }}</h4>
                             {% if testimonial.company and testimonial.position %}
-                                <p class="text-gray-600 text-sm">{{ testimonial.position }} em {{ testimonial.company }}</p>
+                                <p class="text-gray-400 text-sm">{{ testimonial.position }}, {{ testimonial.company }}</p>
                             {% elif testimonial.company %}
-                                <p class="text-gray-600 text-sm">{{ testimonial.company }}</p>
+                                <p class="text-gray-400 text-sm">{{ testimonial.company }}</p>
                             {% elif testimonial.position %}
-                                <p class="text-gray-600 text-sm">{{ testimonial.position }}</p>
+                                <p class="text-gray-400 text-sm">{{ testimonial.position }}</p>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="rating-stars flex mb-3" data-rating="{{ testimonial.rating }}"></div>
-                    <p class="text-gray-700">{{ testimonial.content }}</p>
-                    <p class="text-gray-500 text-sm mt-4">{{ testimonial.created_at.strftime('%d/%m/%Y') }}</p>
+                    
+                    <div class="flex text-yellow-400 mb-4">
+                        {% for i in range(5) %}
+                            {% if i < testimonial.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <p class="text-gray-300 italic">{{ testimonial.content }}</p>
                 </div>
             {% else %}
-                <div class="col-span-3 text-center py-16">
-                    <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 mx-auto mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
+                <!-- Example Testimonials when no testimonials exist in the database -->
+                <!-- Testimonial 1 -->
+                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Ana Silva" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-white">Ana Silva</h4>
+                            <p class="text-gray-400 text-sm">CEO, Tech Solutions</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Nenhum depoimento disponível</h3>
-                    <p class="text-gray-600 mb-6">Seja o primeiro a compartilhar sua experiência com nosso serviço.</p>
+                    
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 italic">"João entregou nosso projeto com excelência. Sua capacidade técnica e comprometimento com prazos foram fundamentais para o sucesso do nosso produto digital."</p>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Carlos Mendes" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-white">Carlos Mendes</h4>
+                            <p class="text-gray-400 text-sm">Diretor, Startup X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 italic">"Contratamos o João para desenvolver nossa plataforma e ficamos impressionados. Ele não só entendeu nosso negócio como propôs melhorias que nem tínhamos pensado."</p>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Ademir" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-white">Ademir</h4>
+                            <p class="text-gray-400 text-sm">Diretor, Asatech</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 italic">"Um dos melhores filmes de Martin Scorsese, só isso já é dizer muito. Leonardo DiCaprio sobressai nesta história baseada na vida real de Jordan Belfort, um agente da bolsa que se tornou milionário manipulando o mercado de valores e outros delitos do mundo financeiro."</p>
                 </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Quote Request Section -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <div class="bg-indigo-50 rounded-lg shadow-md p-8">
-            <h2 class="text-2xl font-bold mb-6 text-center">Quer fazer parte dos nossos casos de sucesso?</h2>
-            <p class="text-gray-700 mb-8 text-center">
-                Conte-nos sobre seu projeto e descubra como podemos ajudar a transformar suas ideias em realidade.
+<!-- Client Logos Section -->
+<section class="py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-white mb-10 text-center">Empresas que confiam no meu trabalho</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6 flex items-center justify-center">
+                <img src="https://via.placeholder.com/150x60/1e293b/ffffff?text=EMPRESA+1" alt="Empresa 1" class="max-h-10 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6 flex items-center justify-center">
+                <img src="https://via.placeholder.com/150x60/1e293b/ffffff?text=EMPRESA+2" alt="Empresa 2" class="max-h-10 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6 flex items-center justify-center">
+                <img src="https://via.placeholder.com/150x60/1e293b/ffffff?text=EMPRESA+3" alt="Empresa 3" class="max-h-10 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6 flex items-center justify-center">
+                <img src="https://via.placeholder.com/150x60/1e293b/ffffff?text=EMPRESA+4" alt="Empresa 4" class="max-h-10 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-8 text-center">
+            <h2 class="text-2xl font-bold text-white mb-4">Pronto para iniciar seu projeto?</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+                Entre em contato para discutirmos como posso ajudar a transformar suas ideias em realidade digital.
             </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div>
-                    <h3 class="font-bold text-lg mb-4">Por que escolher a SeuCodigo?</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mt-1 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span>Desenvolvimento personalizado para suas necessidades</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mt-1 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span>Acompanhamento durante todo o processo</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mt-1 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span>Designs modernos e responsivos</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 mt-1 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span>Suporte contínuo após a entrega</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-center">Comece a conversar agora</h3>
-                    
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('chat') }}" class="btn btn-primary w-full mb-4">
-                            Iniciar Chat com Suporte
-                        </a>
-                    {% else %}
-                        <a href="{{ url_for('login') }}" class="btn btn-primary w-full mb-4">
-                            Entrar para Conversar
-                        </a>
-                    {% endif %}
-                    
-                    <a href="#" id="quote-whatsapp-btn" data-phone="5500000000000" class="btn bg-green-500 hover:bg-green-600 text-white w-full flex items-center justify-center">
-                        <i class="fab fa-whatsapp mr-2"></i> Contato via WhatsApp
-                    </a>
-                </div>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#" class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition duration-200 ease-in-out inline-block">
+                    Fale Comigo
+                </a>
+                <a href="#" id="quote-whatsapp-btn" data-phone="5500000000000" class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 ease-in-out inline-flex items-center justify-center">
+                    <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                </a>
             </div>
         </div>
     </div>
