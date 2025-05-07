@@ -1,223 +1,140 @@
-{% extends "base.html" %}
+{% extends "admin/base_admin.html" %}
 
 {% block title %}Gerenciar Serviços - SeuCodigo{% endblock %}
 
-{% block content %}
-<!-- Admin Header -->
-<section class="bg-indigo-800 text-white py-8">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-2">Gerenciar Serviços</h1>
-        <p class="text-indigo-200">Adicione, edite e remova serviços oferecidos.</p>
-    </div>
-</section>
+{% block page_title %}Gerenciar Serviços{% endblock %}
 
-<!-- Admin Navigation -->
-<section class="bg-gray-100 border-b">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex overflow-x-auto py-4 whitespace-nowrap">
-            <a href="{{ url_for('admin_dashboard') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Dashboard</a>
-            <a href="{{ url_for('admin_projects') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Projetos</a>
-            <a href="{{ url_for('admin_services') }}" class="px-4 py-2 mx-1 rounded-md bg-indigo-600 text-white font-medium">Serviços</a>
-            <a href="{{ url_for('admin_testimonials') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">Depoimentos</a>
-            <a href="{{ url_for('admin_chats') }}" class="px-4 py-2 mx-1 rounded-md bg-white hover:bg-indigo-50 text-gray-800 font-medium">
-                Conversas
-                {% if users_with_messages|default([])|length > 0 %}
-                <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                    {{ users_with_messages|length }}
-                </span>
+{% block action_buttons %}
+<button class="btn-primary flex items-center" onclick="document.getElementById('createServiceModal').classList.remove('hidden')">
+    <i class="fas fa-plus mr-2"></i> Novo Serviço
+</button>
+{% endblock %}
+
+{% block admin_content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {% for service in services %}
+    <div class="card p-4">
+        <div class="flex items-center mb-2">
+            <div class="w-10 h-10 rounded-lg bg-primary-900/30 flex items-center justify-center text-primary-400 mr-3">
+                <i class="{{ service.icon if service.icon else 'fas fa-cogs' }} text-xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-white">{{ service.title }}</h3>
+        </div>
+        <p class="text-gray-400 text-sm mb-3 line-clamp-3">{{ service.description }}</p>
+        
+        <div class="flex justify-between items-center pt-3 border-t border-dark-700/50">
+            <div class="text-sm">
+                {% if service.price %}
+                <span class="text-primary-400 font-medium">R$ {{ "%.2f"|format(service.price) }}</span>
+                {% else %}
+                <span class="text-gray-500">Sob consulta</span>
                 {% endif %}
-            </a>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{{ url_for('edit_service', id=service.id) }}" class="text-sm text-gray-400 hover:text-white px-2 py-1 rounded-md hover:bg-dark-700/50">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <form action="{{ url_for('delete_service', id=service.id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');">
+                    <button type="submit" class="text-sm text-red-400 hover:text-red-300 px-2 py-1 rounded-md hover:bg-dark-700/50">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-</section>
+    {% else %}
+    <div class="col-span-3 card p-8 text-center">
+        <div class="mb-4">
+            <i class="fas fa-concierge-bell text-4xl text-gray-500"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-white mb-2">Nenhum serviço cadastrado</h3>
+        <p class="text-gray-500 mb-4">Clique no botão "Novo Serviço" para adicionar seu primeiro serviço.</p>
+        <button class="btn-primary" onclick="document.getElementById('createServiceModal').classList.remove('hidden')">
+            <i class="fas fa-plus mr-2"></i> Novo Serviço
+        </button>
+    </div>
+    {% endfor %}
+</div>
 
-<!-- Services Content -->
-<section class="py-12">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Service Form -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="border-b px-6 py-4">
-                        <h2 class="font-bold text-lg">
-                            {% if edit_mode %}Editar Serviço{% else %}Adicionar Novo Serviço{% endif %}
-                        </h2>
-                    </div>
-                    <div class="p-6">
-                        <form method="POST" action="{% if edit_mode %}{{ url_for('edit_service', id=service.id) }}{% else %}{{ url_for('admin_services') }}{% endif %}">
-                            {{ form.hidden_tag() }}
-                            <div class="mb-4 form-group">
-                                {{ form.title.label(class="form-label") }}
-                                {{ form.title(class="form-input", placeholder="Título do serviço") }}
-                                {% if form.title.errors %}
-                                    {% for error in form.title.errors %}
-                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                            <div class="mb-4 form-group">
-                                {{ form.description.label(class="form-label") }}
-                                {{ form.description(class="form-input", rows=6, placeholder="Descrição detalhada do serviço") }}
-                                {% if form.description.errors %}
-                                    {% for error in form.description.errors %}
-                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                            <div class="mb-4 form-group">
-                                {{ form.icon.label(class="form-label") }}
-                                {{ form.icon(class="form-input", placeholder="Ex: fas fa-code") }}
-                                {% if form.icon.errors %}
-                                    {% for error in form.icon.errors %}
-                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                                    {% endfor %}
-                                {% endif %}
-                                <p class="text-gray-500 text-sm mt-1">Use classes do FontAwesome (ex: fas fa-code)</p>
-                            </div>
-                            <div class="mb-6 form-group">
-                                {{ form.price.label(class="form-label") }}
-                                {{ form.price(class="form-input", placeholder="99.90") }}
-                                {% if form.price.errors %}
-                                    {% for error in form.price.errors %}
-                                        <p class="text-red-500 text-sm mt-1">{{ error }}</p>
-                                    {% endfor %}
-                                {% endif %}
-                                <p class="text-gray-500 text-sm mt-1">Deixe em branco para "Preço sob consulta"</p>
-                            </div>
-                            <div class="flex justify-between">
-                                {% if edit_mode %}
-                                    <a href="{{ url_for('admin_services') }}" class="btn btn-secondary">Cancelar</a>
-                                    {{ form.submit(class="btn btn-primary", value="Atualizar Serviço") }}
-                                {% else %}
-                                    {{ form.submit(class="btn btn-primary w-full") }}
-                                {% endif %}
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Icon Reference -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden mt-6">
-                    <div class="border-b px-6 py-4">
-                        <h2 class="font-bold text-lg">Referência de Ícones</h2>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-600 mb-4">Exemplos de classes de ícones populares:</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-code text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-code</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-desktop text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-desktop</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-mobile-alt text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-mobile-alt</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-paint-brush text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-paint-brush</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-server text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-server</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-cogs text-indigo-500 text-xl mr-2"></i>
-                                <span class="text-sm">fas fa-cogs</span>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <a href="https://fontawesome.com/icons?d=gallery&s=solid&m=free" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                                Ver mais ícones →
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!-- Create Service Modal -->
+<div id="createServiceModal" class="fixed inset-0 z-50 overflow-auto bg-dark-900/80 flex items-center justify-center hidden">
+    <div class="bg-dark-800 rounded-lg shadow-lg max-w-md w-full mx-4">
+        <div class="flex justify-between items-center border-b border-dark-700/50 p-4">
+            <h3 class="text-lg font-semibold text-white">
+                {% if edit_mode %}Editar Serviço{% else %}Adicionar Novo Serviço{% endif %}
+            </h3>
+            <button type="button" class="text-gray-400 hover:text-white" onclick="document.getElementById('createServiceModal').classList.add('hidden')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form method="POST" action="{% if edit_mode %}{{ url_for('edit_service', id=service.id) }}{% else %}{{ url_for('admin_services') }}{% endif %}" class="p-4">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-4">
+                <label for="{{ form.title.id }}" class="block text-sm font-medium text-gray-300 mb-1">{{ form.title.label.text }}</label>
+                {{ form.title(class="bg-dark-700 text-white border border-dark-600 rounded-md w-full p-2 focus:ring-primary-500 focus:border-primary-500", placeholder="Título do serviço") }}
+                {% if form.title.errors %}
+                    {% for error in form.title.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
             </div>
             
-            <!-- Services List -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="border-b px-6 py-4 flex justify-between items-center">
-                        <h2 class="font-bold text-lg">Serviços Cadastrados</h2>
-                        <span class="text-gray-500 text-sm">Total: {{ services|length }}</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        {% if services %}
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Título
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                                            Descrição
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Preço
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Ações
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    {% for service in services %}
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="text-indigo-500 text-xl mr-3">
-                                                        <i class="{{ service.icon if service.icon else 'fas fa-circle' }}"></i>
-                                                    </div>
-                                                    <div class="text-sm font-medium text-gray-900">{{ service.title }}</div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 hidden md:table-cell">
-                                                <div class="text-sm text-gray-500 line-clamp-2">{{ service.description|truncate(100) }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">
-                                                    {% if service.price %}
-                                                        R$ {{ "%.2f"|format(service.price) }}
-                                                    {% else %}
-                                                        Sob consulta
-                                                    {% endif %}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ url_for('edit_service', id=service.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</a>
-                                                <form action="{{ url_for('delete_service', id=service.id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');">
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">Excluir</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <div class="text-center py-12">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhum serviço cadastrado</h3>
-                                <p class="text-gray-500">Adicione seu primeiro serviço usando o formulário.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
+            <div class="mb-4">
+                <label for="{{ form.description.id }}" class="block text-sm font-medium text-gray-300 mb-1">{{ form.description.label.text }}</label>
+                {{ form.description(class="bg-dark-700 text-white border border-dark-600 rounded-md w-full p-2 focus:ring-primary-500 focus:border-primary-500", rows=4, placeholder="Descrição detalhada do serviço") }}
+                {% if form.description.errors %}
+                    {% for error in form.description.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
             </div>
-        </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.icon.id }}" class="block text-sm font-medium text-gray-300 mb-1">{{ form.icon.label.text }}</label>
+                {{ form.icon(class="bg-dark-700 text-white border border-dark-600 rounded-md w-full p-2 focus:ring-primary-500 focus:border-primary-500", placeholder="fas fa-code") }}
+                {% if form.icon.errors %}
+                    {% for error in form.icon.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <p class="text-gray-500 text-xs mt-1">Use classes do FontAwesome (ex: fas fa-code)</p>
+            </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.price.id }}" class="block text-sm font-medium text-gray-300 mb-1">{{ form.price.label.text }}</label>
+                {{ form.price(class="bg-dark-700 text-white border border-dark-600 rounded-md w-full p-2 focus:ring-primary-500 focus:border-primary-500", placeholder="99.90") }}
+                {% if form.price.errors %}
+                    {% for error in form.price.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <p class="text-gray-500 text-xs mt-1">Deixe em branco para "Preço sob consulta"</p>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('createServiceModal').classList.add('hidden')">Cancelar</button>
+                {{ form.submit(class="btn-primary") }}
+            </div>
+        </form>
     </div>
-</section>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Services page specific JavaScript (if needed)
+document.addEventListener('DOMContentLoaded', function() {
+    // Show modal if we are in edit mode
+    {% if edit_mode %}
+    document.getElementById('createServiceModal').classList.remove('hidden');
+    {% endif %}
+    
+    // Handle ESC key to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.getElementById('createServiceModal').classList.add('hidden');
+        }
     });
+});
 </script>
 {% endblock %}

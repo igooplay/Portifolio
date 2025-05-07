@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - SeuCodigo{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#edfaff',
+                            100: '#d6f1ff',
+                            200: '#b5e9ff',
+                            300: '#83ddff',
+                            400: '#48c8ff',
+                            500: '#1eabff',
+                            600: '#068dff',
+                            700: '#0072f5',
+                            800: '#0762c8',
+                            900: '#0c539d',
+                            950: '#0c3369',
+                        },
+                        dark: {
+                            50: '#f6f7f9',
+                            100: '#ededf1',
+                            200: '#d8dae0',
+                            300: '#b6bbc5',
+                            400: '#8f95a5',
+                            500: '#707989',
+                            600: '#5a6272',
+                            700: '#48505e',
+                            800: '#0f172a',
+                            900: '#0b0f1a',
+                            950: '#060710',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>">
+    
+    {% block head %}{% endblock %}
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a101f;
+        }
+        .nav-link {
+            @apply text-gray-400 hover:text-white transition duration-200 flex items-center py-2 px-4 rounded-lg hover:bg-dark-800/50;
+        }
+        .nav-link.active {
+            @apply bg-dark-800 text-white;
+        }
+        .nav-icon {
+            @apply mr-3 text-lg w-5 text-center;
+        }
+        .btn-primary {
+            @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200;
+        }
+        .btn-secondary {
+            @apply bg-dark-700 hover:bg-dark-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200;
+        }
+        .btn-danger {
+            @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200;
+        }
+        .card {
+            @apply bg-dark-800 border border-dark-700/50 rounded-lg;
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-300 min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 fixed inset-y-0 z-10 transition-transform duration-300 transform bg-dark-800 border-r border-dark-700/50 overflow-y-auto" id="sidebar">
+        <!-- Logo -->
+        <div class="p-4 border-b border-dark-700/50">
+            <a href="{{ url_for('index') }}" class="flex items-center">
+                <span class="text-xl font-bold">
+                    <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
+                </span>
+            </a>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="mt-4 px-4">
+            <div class="mb-6">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">Menu Principal</p>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                            <i class="fas fa-tachometer-alt nav-icon"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin_projects') }}" class="nav-link {% if request.endpoint == 'admin_projects' %}active{% endif %}">
+                            <i class="fas fa-project-diagram nav-icon"></i>
+                            Projetos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin_services') }}" class="nav-link {% if request.endpoint == 'admin_services' %}active{% endif %}">
+                            <i class="fas fa-concierge-bell nav-icon"></i>
+                            Serviços
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin_testimonials') }}" class="nav-link {% if request.endpoint == 'admin_testimonials' %}active{% endif %}">
+                            <i class="fas fa-quote-right nav-icon"></i>
+                            Depoimentos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">Comunicação</p>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{{ url_for('admin_chats') }}" class="nav-link {% if request.endpoint == 'admin_chats' %}active{% endif %}">
+                            <i class="fas fa-comments nav-icon"></i>
+                            Mensagens
+                            {% if users_with_messages|default([])|length > 0 %}
+                            <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                {{ users_with_messages|length }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">Gerenciamento</p>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-user-friends nav-icon"></i>
+                            Usuários
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-cog nav-icon"></i>
+                            Configurações
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- User Info & Actions -->
+        <div class="mt-auto p-4 border-t border-dark-700/50">
+            <div class="flex items-center mb-4">
+                <div class="w-9 h-9 bg-dark-700 rounded-full flex items-center justify-center">
+                    <span class="text-primary-400">AD</span>
+                </div>
+                <div class="ml-3">
+                    <p class="text-white text-sm font-medium">{{ current_user.name or 'Administrador' }}</p>
+                    <p class="text-gray-500 text-xs">{{ current_user.email }}</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <a href="{{ url_for('index') }}" class="nav-link text-sm">
+                    <i class="fas fa-external-link-alt nav-icon"></i>
+                    Voltar ao Site
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-link text-sm text-red-400 hover:text-red-300">
+                    <i class="fas fa-sign-out-alt nav-icon"></i>
+                    Sair
+                </a>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <div class="flex-1 ml-64">
+        <!-- Topbar -->
+        <header class="bg-dark-800 border-b border-dark-700/50 flex justify-between items-center h-16 px-6">
+            <div>
+                <h1 class="text-xl font-bold text-white">{% block page_title %}Admin Dashboard{% endblock %}</h1>
+            </div>
+            
+            <div class="flex items-center">
+                <!-- Mobile Sidebar Toggle (only visible on mobile) -->
+                <button id="mobile-menu-button" class="md:hidden mr-4 text-gray-400 hover:text-white focus:outline-none">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <!-- Action buttons based on page -->
+                {% block action_buttons %}{% endblock %}
+            </div>
+        </header>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mx-auto px-6 py-4">
+                    {% for category, message in messages %}
+                        <div class="p-4 mb-4 rounded-lg 
+                            {% if category == 'success' %}bg-green-100 text-green-700 border border-green-200{% endif %}
+                            {% if category == 'danger' %}bg-red-100 text-red-700 border border-red-200{% endif %}
+                            {% if category == 'warning' %}bg-yellow-100 text-yellow-700 border border-yellow-200{% endif %}
+                            {% if category == 'info' %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}
+                            {% if category not in ['success', 'danger', 'warning', 'info'] %}bg-gray-100 text-gray-700 border border-gray-200{% endif %}
+                        ">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Main Content Area -->
+        <main class="p-6">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarEl = document.getElementById('sidebar');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    sidebarEl.classList.toggle('-translate-x-full');
+                });
+            }
+            
+            // Handle responsive sidebar
+            function handleResize() {
+                if (window.innerWidth < 768) {
+                    sidebarEl.classList.add('-translate-x-full');
+                } else {
+                    sidebarEl.classList.remove('-translate-x-full');
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            handleResize(); // Call on initial load
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

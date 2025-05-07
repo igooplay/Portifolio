@@ -1,186 +1,123 @@
-{% extends "base.html" %}
+{% extends "admin/base_admin.html" %}
 
 {% block title %}Dashboard - SeuCodigo{% endblock %}
 
-{% block content %}
-<div class="flex">
-    <!-- Admin Sidebar -->
-    <aside class="w-64 min-h-screen bg-dark-800 border-r border-dark-700/50 hidden md:block">
-        <div class="p-6">
-            <a href="{{ url_for('index') }}" class="text-xl font-bold">
-                <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
-            </a>
+{% block page_title %}Dashboard{% endblock %}
+
+{% block action_buttons %}
+<button class="btn-primary flex items-center">
+    <i class="fas fa-calendar-plus mr-2"></i> Agendar Reunião
+</button>
+{% endblock %}
+
+{% block admin_content %}
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Projects Card -->
+    <div class="card p-6">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-white">Total de Projetos</h3>
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary-900/30 text-primary-400">
+                <i class="fas fa-folder"></i>
+            </span>
         </div>
-        
-        <nav class="mt-6">
-            <div class="px-6 pb-4">
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{{ url_for('admin_dashboard') }}" class="flex items-center py-3 px-4 rounded-lg bg-dark-900 text-white">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-primary-400">
-                                <i class="fas fa-tachometer-alt"></i>
-                            </span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('admin_projects') }}" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-project-diagram"></i>
-                            </span>
-                            <span>Projetos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('admin_services') }}" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-concierge-bell"></i>
-                            </span>
-                            <span>Serviços</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('admin_testimonials') }}" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-quote-right"></i>
-                            </span>
-                            <span>Depoimentos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('admin_chats') }}" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-comments"></i>
-                            </span>
-                            <span>Mensagens</span>
-                            {% if users_with_messages|length > 0 %}
-                            <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{ users_with_messages|length }}</span>
-                            {% endif %}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-user-friends"></i>
-                            </span>
-                            <span>Usuários</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center py-3 px-4 rounded-lg text-gray-400 hover:text-white hover:bg-dark-700/50">
-                            <span class="inline-flex items-center justify-center w-8 h-8 mr-3 text-gray-500">
-                                <i class="fas fa-cog"></i>
-                            </span>
-                            <span>Configurações</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        
-        <div class="absolute bottom-0 left-0 right-0 p-6">
-            <div class="flex items-center mb-3">
-                <div class="w-10 h-10 bg-dark-700 rounded-full flex items-center justify-center">
-                    <span class="text-primary-400">AD</span>
-                </div>
-                <div class="ml-3">
-                    <p class="text-white text-sm font-medium">Administrador</p>
-                    <p class="text-gray-500 text-xs">admin@seucodigo.com</p>
-                </div>
-            </div>
-            <a href="{{ url_for('index') }}" class="flex items-center text-gray-400 hover:text-white text-sm">
-                <i class="fas fa-arrow-left mr-2"></i> Voltar ao Site
-            </a>
-            <a href="{{ url_for('logout') }}" class="flex items-center text-red-400 hover:text-red-300 text-sm mt-2">
-                <i class="fas fa-sign-out-alt mr-2"></i> Sair
-            </a>
-        </div>
-    </aside>
+        <p class="text-3xl font-bold text-white mb-1">{{ projects_count }}</p>
+        <p class="text-sm text-gray-500">Projetos cadastrados</p>
+    </div>
     
-    <!-- Main Content -->
-    <div class="flex-1 min-h-screen flex flex-col">
-        <!-- Dashboard Header -->
-        <header class="bg-dark-800 border-b border-dark-700/50 py-4 px-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-white">Dashboard</h1>
-                <button class="flex items-center bg-primary-500 hover:bg-primary-600 text-white py-2 px-4 rounded-lg transition duration-200 ease-in-out">
-                    <i class="fas fa-calendar-plus mr-2"></i> Agendar Reunião
-                </button>
+    <!-- Testimonials Card -->
+    <div class="card p-6">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-white">Depoimentos</h3>
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary-900/30 text-primary-400">
+                <i class="fas fa-star"></i>
+            </span>
+        </div>
+        <p class="text-3xl font-bold text-white mb-1">{{ testimonials_count }}</p>
+        <p class="text-sm text-gray-500">Avaliações positivas</p>
+    </div>
+    
+    <!-- Messages Card -->
+    <div class="card p-6">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-white">Mensagens</h3>
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary-900/30 text-primary-400">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </div>
+        <p class="text-3xl font-bold text-white mb-1">{{ users_with_messages|length }}</p>
+        <p class="text-sm text-gray-500">{% if users_with_messages|length == 1 %}1 não lida{% elif users_with_messages|length > 1 %}{{ users_with_messages|length }} não lidas{% else %}Nenhuma não lida{% endif %}</p>
+    </div>
+    
+    <!-- Services Card -->
+    <div class="card p-6">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg font-bold text-white">Serviços</h3>
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary-900/30 text-primary-400">
+                <i class="fas fa-cogs"></i>
+            </span>
+        </div>
+        <p class="text-3xl font-bold text-white mb-1">{{ services_count }}</p>
+        <p class="text-sm text-gray-500">Serviços oferecidos</p>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Visitors Chart -->
+    <div class="card p-6">
+        <h3 class="text-lg font-bold text-white mb-2">Visitantes do Site</h3>
+        <p class="text-sm text-gray-500 mb-4">Visitantes nos últimos 7 meses</p>
+        <div class="h-64">
+            <canvas id="visitorsChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Messages Chart -->
+    <div class="card p-6">
+        <h3 class="text-lg font-bold text-white mb-2">Mensagens por Dia</h3>
+        <p class="text-sm text-gray-500 mb-4">Mensagens recebidas nos últimos 7 dias</p>
+        <div class="h-64">
+            <canvas id="messagesChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="card p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-white">Atividades Recentes</h3>
+        <a href="#" class="text-primary-400 hover:text-primary-300 text-sm font-medium">Ver todas</a>
+    </div>
+    <div class="space-y-4">
+        <div class="flex items-start">
+            <div class="w-10 h-10 rounded-full bg-primary-900/30 flex items-center justify-center text-primary-400 mr-3 flex-shrink-0">
+                <i class="fas fa-comments"></i>
             </div>
-        </header>
-        
-        <!-- Dashboard Content -->
-        <div class="p-6 flex-grow">
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <!-- Projects Card -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-bold text-white">Total de Projetos</h3>
-                        <span class="inline-flex items-center justify-center w-6 h-6 text-primary-400">
-                            <i class="fas fa-folder"></i>
-                        </span>
-                    </div>
-                    <p class="text-3xl font-bold text-white mb-1">{{ projects_count }}</p>
-                    <p class="text-sm text-gray-500">Projetos cadastrados</p>
-                </div>
-                
-                <!-- Testimonials Card -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-bold text-white">Depoimentos</h3>
-                        <span class="inline-flex items-center justify-center w-6 h-6 text-primary-400">
-                            <i class="fas fa-star"></i>
-                        </span>
-                    </div>
-                    <p class="text-3xl font-bold text-white mb-1">{{ testimonials_count }}</p>
-                    <p class="text-sm text-gray-500">Avaliações positivas</p>
-                </div>
-                
-                <!-- Messages Card -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-bold text-white">Mensagens</h3>
-                        <span class="inline-flex items-center justify-center w-6 h-6 text-primary-400">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                    </div>
-                    <p class="text-3xl font-bold text-white mb-1">{{ users_with_messages|length }}</p>
-                    <p class="text-sm text-gray-500">0 não lidas</p>
-                </div>
-                
-                <!-- Services Card -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-bold text-white">Serviços</h3>
-                        <span class="inline-flex items-center justify-center w-6 h-6 text-primary-400">
-                            <i class="fas fa-cogs"></i>
-                        </span>
-                    </div>
-                    <p class="text-3xl font-bold text-white mb-1">{{ services_count }}</p>
-                    <p class="text-sm text-gray-500">Serviços oferecidos</p>
-                </div>
+            <div>
+                <p class="text-white">Nova mensagem recebida</p>
+                <p class="text-gray-500 text-sm">João Silva enviou uma mensagem sobre desenvolvimento web.</p>
+                <p class="text-gray-600 text-xs mt-1">Há 2 horas atrás</p>
             </div>
-            
-            <!-- Charts -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Visitors Chart -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <h3 class="text-lg font-bold text-white mb-2">Visitantes do Site</h3>
-                    <p class="text-sm text-gray-500 mb-4">Visitantes nos últimos 7 meses</p>
-                    <div class="h-64">
-                        <canvas id="visitorsChart"></canvas>
-                    </div>
-                </div>
-                
-                <!-- Messages Chart -->
-                <div class="bg-dark-800 border border-dark-700/50 rounded-lg p-6">
-                    <h3 class="text-lg font-bold text-white mb-2">Mensagens por Dia</h3>
-                    <p class="text-sm text-gray-500 mb-4">Mensagens recebidas nos últimos 7 dias</p>
-                    <div class="h-64">
-                        <canvas id="messagesChart"></canvas>
-                    </div>
-                </div>
+        </div>
+        <div class="flex items-start">
+            <div class="w-10 h-10 rounded-full bg-primary-900/30 flex items-center justify-center text-primary-400 mr-3 flex-shrink-0">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div>
+                <p class="text-white">Novo usuário registrado</p>
+                <p class="text-gray-500 text-sm">Maria Oliveira criou uma conta em seu site.</p>
+                <p class="text-gray-600 text-xs mt-1">Há 1 dia atrás</p>
+            </div>
+        </div>
+        <div class="flex items-start">
+            <div class="w-10 h-10 rounded-full bg-primary-900/30 flex items-center justify-center text-primary-400 mr-3 flex-shrink-0">
+                <i class="fas fa-star"></i>
+            </div>
+            <div>
+                <p class="text-white">Novo depoimento adicionado</p>
+                <p class="text-gray-500 text-sm">Carlos Santos adicionou um depoimento com avaliação 5 estrelas.</p>
+                <p class="text-gray-600 text-xs mt-1">Há 3 dias atrás</p>
             </div>
         </div>
     </div>
