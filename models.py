@@ -34,11 +34,7 @@ class Project(db.Model):
     description = db.Column(db.Text)
     image_url = db.Column(db.String(255))
     link = db.Column(db.String(255))
-    github_link = db.Column(db.String(255))  # Novo campo para link do GitHub
-    featured = db.Column(db.Boolean, default=False)  # Novo campo para projetos em destaque
-    category = db.Column(db.String(50))  # Novo campo para categorização
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
