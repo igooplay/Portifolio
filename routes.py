@@ -38,21 +38,35 @@ def testimonials():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        # Se o usuário já estiver logado, verifica se é admin e redireciona para a página adequada
+        app.logger.info(f"Usuário já autenticado: {current_user.username}, Admin: {current_user.is_admin}")
         return redirect(url_for('index'))
     
     form = LoginForm()
     if form.validate_on_submit():
+        app.logger.info(f"Tentativa de login com: {form.email.data}")
+        
         # Tenta encontrar o usuário por email ou nome de usuário
         user = User.query.filter(
             (User.email == form.email.data) | (User.username == form.email.data)
         ).first()
         
-        if user is None or not user.check_password(form.password.data):
+        if user is None:
+            app.logger.info("Usuário não encontrado")
+            flash('Email/usuário ou senha inválidos', 'danger')
+            return redirect(url_for('login'))
+        
+        app.logger.info(f"Usuário encontrado: {user.username}, Admin: {user.is_admin}")
+            
+        if not user.check_password(form.password.data):
+            app.logger.info("Senha incorreta")
             flash('Email/usuário ou senha inválidos', 'danger')
             return redirect(url_for('login'))
         
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
+        app.logger.info(f"Next page: {next_page}")
+        
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('index')
         flash('Login realizado com sucesso!', 'success')
@@ -476,6 +490,11 @@ def admin_chats():
                           users_with_messages=users,
                           current_chat_user=selected_user,
                           messages=messages)
+
+# Página de teste para admin
+@app.route('/admin-test')
+def admin_test():
+    return render_template('admin_test.html')
 
 # Error handlers
 @app.errorhandler(404)
