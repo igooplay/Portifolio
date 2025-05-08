@@ -27,6 +27,14 @@
                     <a href="{{ url_for('projects') }}" class="btn-outline py-3 px-6">
                         Ver portfólio
                     </a>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn-outline py-3 px-6 bg-purple-700 hover:bg-purple-800 text-white border-purple-700 hover:border-purple-800">
+                        Painel Admin
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('admin_test') }}" class="btn-outline py-3 px-6 bg-gray-700 hover:bg-gray-800 text-white border-gray-700 hover:border-gray-800">
+                        Teste Admin
+                    </a>
                 </div>
             </div>
             <div class="hidden md:block slide-in-right">
