@@ -7,7 +7,6 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
 from flask_cors import CORS
-from flask_migrate import Migrate
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -38,9 +37,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Initialize the database with the app
 db.init_app(app)
 
-# Initialize Flask-Migrate for database migrations
-migrate = Migrate(app, db)
-
 # Configure login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -48,13 +44,12 @@ login_manager.login_view = 'login'
 login_manager.login_message = 'Por favor, faça login para acessar esta página.'
 login_manager.login_message_category = 'info'
 
-# Import models - needed for both Flask-Migrate and create_all()
-from models import User, Project, Service, Testimonial, ChatMessage
-
-# Create tables if they don't exist (will be handled by migrations once setup)
-if not os.environ.get("USE_MIGRATIONS", False):
-    with app.app_context():
-        db.create_all()
+# Import models and create tables within app context
+with app.app_context():
+    # Import models here to avoid circular imports
+    from models import User, Project, Service, Testimonial, ChatMessage
+    
+    db.create_all()
 
 # Import routes after models are created
 from routes import *
