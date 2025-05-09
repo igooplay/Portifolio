@@ -8,6 +8,9 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
 from flask_cors import CORS
 
+# Importe a configuração MySQL
+import mysql_config
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,11 +30,27 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)  # needed for url_for
 CORS(app)
 
 # Configure database connection
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///seucodigo.db")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
+# Verifica se estamos usando PostgreSQL (variável de ambiente DATABASE_URL) ou MySQL
+db_url = os.environ.get("DATABASE_URL")
+using_postgres = db_url is not None and db_url.startswith('postgres')
+
+if using_postgres:
+    # Configuração para PostgreSQL
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_recycle": 300,
+        "pool_pre_ping": True
+    }
+else:
+    # Configuração para MySQL
+    app.config["SQLALCHEMY_DATABASE_URI"] = mysql_config.MYSQL_CONNECTION_STRING
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_recycle": 300,
+        "pool_pre_ping": True,
+        "connect_args": {
+            "charset": mysql_config.MYSQL_CHARSET
+        }
+    }
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize the database with the app
