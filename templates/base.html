@@ -246,22 +246,48 @@
                     <ul class="space-y-2">
                         <li class="flex items-start">
                             <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary-500"></i>
-                            <span class="text-gray-400">São Paulo, SP - Brasil</span>
+                            <span class="text-gray-400">
+                                {% if site_config and site_config.address %}
+                                    {{ site_config.address }} - {{ site_config.country }}
+                                {% else %}
+                                    São Paulo, SP - Brasil
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-envelope mt-1 mr-3 text-primary-500"></i>
-                            <span class="text-gray-400">contato@seucodigo.com.br</span>
+                            <span class="text-gray-400">
+                                {% if site_config and site_config.email %}
+                                    {{ site_config.email }}
+                                {% else %}
+                                    contato@seucodigo.com.br
+                                {% endif %}
+                            </span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-phone-alt mt-1 mr-3 text-primary-500"></i>
-                            <span class="text-gray-400">+55 (11) 99999-9999</span>
+                            <span class="text-gray-400">
+                                {% if site_config and site_config.phone %}
+                                    {{ site_config.phone }}
+                                {% else %}
+                                    +55 (11) 99999-9999
+                                {% endif %}
+                            </span>
                         </li>
+                        {% if site_config and site_config.whatsapp %}
+                        <li class="flex items-start">
+                            <i class="fab fa-whatsapp mt-1 mr-3 text-primary-500"></i>
+                            <span class="text-gray-400">
+                                {{ site_config.whatsapp }}
+                            </span>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
             
             <div class="border-t border-dark-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 SeuCodigo. Todos os direitos reservados.</p>
+                <p>&copy; 2025 {% if site_config %}{{ site_config.company_name }}{% else %}SeuCodigo{% endif %}. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
