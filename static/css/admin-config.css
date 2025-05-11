@@ -1,0 +1,83 @@
+/* Estilos específicos para a página de configurações do site */
+
+.form-label {
+    @apply block text-gray-300 mb-2 font-medium text-sm;
+}
+
+.form-input, 
+.form-select, 
+.form-textarea {
+    @apply bg-dark-900 border border-dark-700 rounded-md w-full py-2 px-3 text-white;
+    @apply focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none;
+}
+
+.form-select {
+    @apply pr-10 bg-no-repeat;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+}
+
+.form-textarea {
+    @apply resize-none;
+}
+
+.tooltip {
+    @apply relative cursor-help;
+}
+
+.tooltip:hover::after {
+    content: attr(title);
+    @apply absolute left-0 bottom-full mb-2 px-3 py-1 text-xs bg-dark-900 text-white rounded;
+    @apply shadow-lg z-50 whitespace-nowrap;
+    width: max-content;
+}
+
+/* Cards para o layout */
+.config-card {
+    @apply bg-dark-800 rounded-lg p-6 shadow-lg border border-dark-700/50;
+}
+
+.config-card-header {
+    @apply flex items-center justify-between mb-4 pb-4 border-b border-dark-700;
+}
+
+.config-card-title {
+    @apply text-xl font-semibold text-white flex items-center;
+}
+
+.config-card-title i {
+    @apply mr-2 text-primary-500;
+}
+
+/* Botões */
+.btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md;
+    @apply transition-colors duration-200 inline-flex items-center justify-center;
+}
+
+.btn-outline {
+    @apply border border-dark-600 hover:border-primary-500 text-gray-300 hover:text-white font-medium rounded-md;
+    @apply transition-colors duration-200 inline-flex items-center justify-center;
+}
+
+/* Elementos específicos para a página */
+.country-field-icon,
+.phone-field-icon {
+    @apply absolute left-3 top-3 text-gray-400;
+}
+
+/* Ajuste para ícones dentro de inputs */
+.input-with-icon {
+    @apply pl-10;
+}
+
+/* Previsualização de imagens */
+.image-preview-container {
+    @apply mt-4 p-4 border border-dark-700 rounded-lg bg-dark-900 flex items-center justify-center;
+    height: 150px;
+}
+
+.image-preview {
+    @apply max-h-full max-w-full;
+}
