@@ -56,6 +56,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Initialize the database with the app
 db.init_app(app)
 
+# Configure context processor para disponibilizar as configurações
+@app.context_processor
+def inject_site_config():
+    from models import SiteConfig
+    return {'site_config': SiteConfig.get_settings()}
+
 # Configure login manager
 login_manager = LoginManager()
 login_manager.init_app(app)

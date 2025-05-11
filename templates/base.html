@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SeuCodigo - Portfólio profissional de desenvolvimento web e soluções digitais">
-    <title>{% block title %}SeuCodigo - Portfólio Profissional{% endblock %}</title>
+    <meta name="description" content="{% if site_config %}{{ site_config.company_name }} - Portfólio profissional de desenvolvimento web e soluções digitais{% else %}SeuCodigo - Portfólio profissional de desenvolvimento web e soluções digitais{% endif %}">
+    <title>{% block title %}{% if site_config %}{{ site_config.company_name }}{% else %}SeuCodigo{% endif %} - Portfólio Profissional{% endblock %}</title>
+    {% if site_config and site_config.favicon_url %}
+    <link rel="icon" href="{{ site_config.favicon_url }}" type="image/x-icon">
+    {% endif %}
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -54,7 +57,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     
     <!-- Favicon -->
+    {% if not site_config or not site_config.favicon_url %}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💻</text></svg>">
+    {% endif %}
     
     {% block head %}{% endblock %}
 </head>
@@ -65,8 +70,13 @@
             <div class="flex justify-between items-center py-4">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{{ url_for('index') }}" class="text-2xl font-bold">
-                        <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
+                    <a href="{{ url_for('index') }}" class="text-2xl font-bold flex items-center">
+                        {% if site_config and site_config.logo_url %}
+                            <img src="{{ site_config.logo_url }}" alt="{{ site_config.company_name }}" class="h-10 mr-2">
+                            <span class="text-primary-400">{{ site_config.company_name }}</span>
+                        {% else %}
+                            <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
+                        {% endif %}
                     </a>
                 </div>
                 
@@ -169,23 +179,48 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- About -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4 font-heading"><span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span></h3>
+                    <h3 class="text-xl font-bold mb-4 font-heading">
+                        {% if site_config and site_config.logo_url %}
+                            <img src="{{ site_config.logo_url }}" alt="{{ site_config.company_name }}" class="h-8 inline-block mr-2">
+                            <span class="text-primary-400">{{ site_config.company_name }}</span>
+                        {% else %}
+                            <span class="text-primary-400">&lt;</span><span class="text-primary-500">seucodigo</span><span class="text-primary-400">/&gt;</span>
+                        {% endif %}
+                    </h3>
                     <p class="text-gray-400">
                         Soluções profissionais em desenvolvimento web e design para alavancar seu negócio digital.
                     </p>
                     <div class="mt-4 flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        {% if site_config and site_config.facebook %}
+                        <a href="{{ site_config.facebook }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        {% endif %}
+                        {% if site_config and site_config.twitter %}
+                        <a href="{{ site_config.twitter }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        {% endif %}
+                        {% if site_config and site_config.instagram %}
+                        <a href="{{ site_config.instagram }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                        {% endif %}
+                        {% if site_config and site_config.linkedin %}
+                        <a href="{{ site_config.linkedin }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
+                        {% endif %}
+                        {% if site_config and site_config.github %}
+                        <a href="{{ site_config.github }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        {% endif %}
+                        {% if site_config and site_config.youtube %}
+                        <a href="{{ site_config.youtube }}" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
                 
