@@ -1,7 +1,8 @@
 import os
+from flask import g, request
 from app import app, db
 from werkzeug.security import generate_password_hash
-from models import User, Project, Service, Testimonial
+from models import User, Project, Service, Testimonial, SiteConfig
 
 # Criar dados de exemplo se o banco estiver vazio
 with app.app_context():

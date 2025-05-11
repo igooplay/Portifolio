@@ -78,8 +78,14 @@ class SiteConfigForm(FlaskForm):
     address = TextAreaField('Endereço', validators=[DataRequired(), Length(max=255)])
     latitude = StringField('Latitude', validators=[Optional(), Length(max=20)])
     longitude = StringField('Longitude', validators=[Optional(), Length(max=20)])
-    logo_url = StringField('URL do Logo', validators=[Optional(), Length(max=255)])
-    favicon_url = StringField('URL do Favicon', validators=[Optional(), Length(max=255)])
+    
+    # Upload de imagens
+    logo_file = FileField('Upload de Logo', validators=[Optional()])
+    favicon_file = FileField('Upload de Favicon', validators=[Optional()])
+    
+    # URLs alternativas (caso não faça upload)
+    logo_url = StringField('URL do Logo (ou upload acima)', validators=[Optional(), Length(max=255)])
+    favicon_url = StringField('URL do Favicon (ou upload acima)', validators=[Optional(), Length(max=255)])
     
     # Redes sociais
     whatsapp = StringField('WhatsApp', validators=[Optional(), Length(max=20)])

@@ -84,7 +84,7 @@
             </div>
             <hr class="border-dark-700 mb-6">
 
-            <form method="POST" action="{{ url_for('admin_site_config') }}">
+            <form method="POST" action="{{ url_for('admin_site_config') }}" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -172,29 +172,57 @@
                 <hr class="border-dark-700 mb-6">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Logo URL -->
+                    <!-- Logo Upload e URL -->
                     <div class="form-group">
-                        {{ form.logo_url.label(class="form-label") }}
-                        {{ form.logo_url(class="form-input") }}
-                        {% for error in form.logo_url.errors %}
-                            <span class="text-red-500 text-sm">{{ error }}</span>
-                        {% endfor %}
+                        <div class="mb-4">
+                            {{ form.logo_file.label(class="form-label") }}
+                            {{ form.logo_file(class="form-input py-1.5 px-2 bg-dark-900 border border-dark-700 text-white rounded w-full") }}
+                            {% for error in form.logo_file.errors %}
+                                <span class="text-red-500 text-sm">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.logo_url.label(class="form-label") }}
+                            {{ form.logo_url(class="form-input") }}
+                            {% for error in form.logo_url.errors %}
+                                <span class="text-red-500 text-sm">{{ error }}</span>
+                            {% endfor %}
+                        </div>
                         
                         <div class="mt-4 p-4 border border-dark-700 rounded-lg bg-dark-900 flex items-center justify-center">
-                            <img id="logo-preview" src="{{ form.logo_url.data }}" alt="Logo Preview" class="max-h-32 max-w-full" onerror="this.src='/static/img/placeholder-logo.svg'; this.onerror=null;">
+                            {% if config and config.logo_url %}
+                                <img id="logo-preview" src="{{ config.logo_url }}" alt="Logo Preview" class="max-h-32 max-w-full" onerror="this.src='/static/img/placeholder-logo.svg'; this.onerror=null;">
+                            {% else %}
+                                <img id="logo-preview" src="/static/img/placeholder-logo.svg" alt="Logo Preview" class="max-h-32 max-w-full">
+                            {% endif %}
                         </div>
                     </div>
 
-                    <!-- Favicon URL -->
+                    <!-- Favicon Upload e URL -->
                     <div class="form-group">
-                        {{ form.favicon_url.label(class="form-label") }}
-                        {{ form.favicon_url(class="form-input") }}
-                        {% for error in form.favicon_url.errors %}
-                            <span class="text-red-500 text-sm">{{ error }}</span>
-                        {% endfor %}
+                        <div class="mb-4">
+                            {{ form.favicon_file.label(class="form-label") }}
+                            {{ form.favicon_file(class="form-input py-1.5 px-2 bg-dark-900 border border-dark-700 text-white rounded w-full") }}
+                            {% for error in form.favicon_file.errors %}
+                                <span class="text-red-500 text-sm">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.favicon_url.label(class="form-label") }}
+                            {{ form.favicon_url(class="form-input") }}
+                            {% for error in form.favicon_url.errors %}
+                                <span class="text-red-500 text-sm">{{ error }}</span>
+                            {% endfor %}
+                        </div>
                         
                         <div class="mt-4 p-4 border border-dark-700 rounded-lg bg-dark-900 flex items-center justify-center">
-                            <img id="favicon-preview" src="{{ form.favicon_url.data }}" alt="Favicon Preview" class="max-h-16 max-w-full" onerror="this.src='/static/img/placeholder-favicon.svg'; this.onerror=null;">
+                            {% if config and config.favicon_url %}
+                                <img id="favicon-preview" src="{{ config.favicon_url }}" alt="Favicon Preview" class="max-h-16 max-w-full" onerror="this.src='/static/img/placeholder-favicon.svg'; this.onerror=null;">
+                            {% else %}
+                                <img id="favicon-preview" src="/static/img/placeholder-favicon.svg" alt="Favicon Preview" class="max-h-16 max-w-full">
+                            {% endif %}
                         </div>
                     </div>
                 </div>

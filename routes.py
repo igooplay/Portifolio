@@ -206,10 +206,31 @@ def admin_site_config():
         flash('Você não tem permissão para acessar esta página.', 'danger')
         return redirect(url_for('index'))
     
+    from utils import save_uploaded_file
+    
     config = SiteConfig.get_settings()
     form = SiteConfigForm()
     
     if form.validate_on_submit():
+        # Processar upload do logo
+        if form.logo_file.data:
+            logo_path = save_uploaded_file(form.logo_file.data, subfolder='logo')
+            if logo_path:
+                config.logo_url = logo_path
+        # Caso contrário, usar URL se foi fornecida
+        elif form.logo_url.data:
+            config.logo_url = form.logo_url.data
+            
+        # Processar upload do favicon
+        if form.favicon_file.data:
+            favicon_path = save_uploaded_file(form.favicon_file.data, subfolder='favicon')
+            if favicon_path:
+                config.favicon_url = favicon_path
+        # Caso contrário, usar URL se foi fornecida
+        elif form.favicon_url.data:
+            config.favicon_url = form.favicon_url.data
+        
+        # Atualizar demais configurações
         config.company_name = form.company_name.data
         config.email = form.email.data
         config.phone = form.phone.data
@@ -217,8 +238,6 @@ def admin_site_config():
         config.address = form.address.data
         config.latitude = form.latitude.data
         config.longitude = form.longitude.data
-        config.logo_url = form.logo_url.data
-        config.favicon_url = form.favicon_url.data
         config.whatsapp = form.whatsapp.data
         config.instagram = form.instagram.data
         config.facebook = form.facebook.data
@@ -251,7 +270,8 @@ def admin_site_config():
     
     return render_template('admin/site_config.html', 
                           title='Configurações do Site - SeuCodigo',
-                          form=form)
+                          form=form,
+                          config=config)
 
 # Admin routes
 @app.route('/admin/dashboard')
