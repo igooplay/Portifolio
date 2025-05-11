@@ -1,0 +1,239 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Configurações do Site - SeuCodigo{% endblock %}
+
+{% block admin_content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Configurações do Site</h1>
+    </div>
+
+    <div class="bg-dark-800 rounded-lg shadow-md p-6">
+        <div class="mb-6">
+            <div class="flex items-center text-white mb-4">
+                <i class="fas fa-building mr-2"></i>
+                <h2 class="text-xl font-semibold">Informações da Empresa</h2>
+            </div>
+            <hr class="border-dark-700 mb-6">
+
+            <form method="POST" action="{{ url_for('admin_site_config') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Company Name -->
+                    <div class="form-group">
+                        {{ form.company_name.label(class="form-label") }}
+                        {{ form.company_name(class="form-input") }}
+                        {% for error in form.company_name.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-input") }}
+                        {% for error in form.email.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        {{ form.phone.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-400">
+                                <i class="fas fa-phone"></i>
+                            </span>
+                            {{ form.phone(class="form-input pl-9") }}
+                        </div>
+                        {% for error in form.phone.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Country -->
+                    <div class="form-group">
+                        {{ form.country.label(class="form-label") }}
+                        {{ form.country(class="form-select") }}
+                        {% for error in form.country.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="form-group mt-6">
+                    {{ form.address.label(class="form-label") }}
+                    {{ form.address(class="form-textarea", rows=3) }}
+                    {% for error in form.address.errors %}
+                        <span class="text-red-500 text-sm">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Latitude -->
+                    <div class="form-group">
+                        {{ form.latitude.label(class="form-label inline-flex items-center") }}
+                        <span class="ml-1 text-gray-400 tooltip" title="Latitude geográfica para exibição no mapa">
+                            <i class="fas fa-question-circle"></i>
+                        </span>
+                        {{ form.latitude(class="form-input") }}
+                        {% for error in form.latitude.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Longitude -->
+                    <div class="form-group">
+                        {{ form.longitude.label(class="form-label inline-flex items-center") }}
+                        <span class="ml-1 text-gray-400 tooltip" title="Longitude geográfica para exibição no mapa">
+                            <i class="fas fa-question-circle"></i>
+                        </span>
+                        {{ form.longitude(class="form-input") }}
+                        {% for error in form.longitude.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="flex items-center text-white mt-10 mb-4">
+                    <i class="fas fa-image mr-2"></i>
+                    <h2 class="text-xl font-semibold">Logo e Favicon</h2>
+                </div>
+                <hr class="border-dark-700 mb-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Logo URL -->
+                    <div class="form-group">
+                        {{ form.logo_url.label(class="form-label") }}
+                        {{ form.logo_url(class="form-input") }}
+                        {% for error in form.logo_url.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                        
+                        <div class="mt-4 p-4 border border-dark-700 rounded-lg bg-dark-900 flex items-center justify-center">
+                            <img id="logo-preview" src="{{ form.logo_url.data }}" alt="Logo Preview" class="max-h-32 max-w-full" onerror="this.src='/static/img/placeholder-logo.svg'; this.onerror=null;">
+                        </div>
+                    </div>
+
+                    <!-- Favicon URL -->
+                    <div class="form-group">
+                        {{ form.favicon_url.label(class="form-label") }}
+                        {{ form.favicon_url(class="form-input") }}
+                        {% for error in form.favicon_url.errors %}
+                            <span class="text-red-500 text-sm">{{ error }}</span>
+                        {% endfor %}
+                        
+                        <div class="mt-4 p-4 border border-dark-700 rounded-lg bg-dark-900 flex items-center justify-center">
+                            <img id="favicon-preview" src="{{ form.favicon_url.data }}" alt="Favicon Preview" class="max-h-16 max-w-full" onerror="this.src='/static/img/placeholder-favicon.svg'; this.onerror=null;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center text-white mt-10 mb-4">
+                    <i class="fas fa-share-alt mr-2"></i>
+                    <h2 class="text-xl font-semibold">Redes Sociais</h2>
+                </div>
+                <hr class="border-dark-700 mb-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- WhatsApp -->
+                    <div class="form-group">
+                        {{ form.whatsapp.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-green-500">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+                            {{ form.whatsapp(class="form-input pl-9", placeholder="+5511999999999") }}
+                        </div>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="form-group">
+                        {{ form.instagram.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-pink-500">
+                                <i class="fab fa-instagram"></i>
+                            </span>
+                            {{ form.instagram(class="form-input pl-9", placeholder="seuusuario") }}
+                        </div>
+                    </div>
+
+                    <!-- Facebook -->
+                    <div class="form-group">
+                        {{ form.facebook.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-blue-500">
+                                <i class="fab fa-facebook"></i>
+                            </span>
+                            {{ form.facebook(class="form-input pl-9", placeholder="seuusuario") }}
+                        </div>
+                    </div>
+
+                    <!-- LinkedIn -->
+                    <div class="form-group">
+                        {{ form.linkedin.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-blue-700">
+                                <i class="fab fa-linkedin"></i>
+                            </span>
+                            {{ form.linkedin(class="form-input pl-9", placeholder="seuusuario") }}
+                        </div>
+                    </div>
+
+                    <!-- Twitter -->
+                    <div class="form-group">
+                        {{ form.twitter.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-blue-400">
+                                <i class="fab fa-twitter"></i>
+                            </span>
+                            {{ form.twitter(class="form-input pl-9", placeholder="seuusuario") }}
+                        </div>
+                    </div>
+
+                    <!-- YouTube -->
+                    <div class="form-group">
+                        {{ form.youtube.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-red-500">
+                                <i class="fab fa-youtube"></i>
+                            </span>
+                            {{ form.youtube(class="form-input pl-9", placeholder="canal") }}
+                        </div>
+                    </div>
+
+                    <!-- GitHub -->
+                    <div class="form-group">
+                        {{ form.github.label(class="form-label") }}
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-300">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            {{ form.github(class="form-input pl-9", placeholder="seuusuario") }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-8">
+                    <button type="submit" class="btn-primary px-6 py-2">
+                        <i class="fas fa-save mr-2"></i> {{ form.submit.label.text }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Preview images when URL changes
+    document.getElementById('logo_url').addEventListener('input', function() {
+        document.getElementById('logo-preview').src = this.value || '/static/img/placeholder-logo.png';
+    });
+    
+    document.getElementById('favicon_url').addEventListener('input', function() {
+        document.getElementById('favicon-preview').src = this.value || '/static/img/placeholder-favicon.png';
+    });
+</script>
+{% endblock %}

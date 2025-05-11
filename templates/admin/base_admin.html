@@ -160,7 +160,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link">
+                        <a href="{{ url_for('admin_site_config') }}" class="nav-link {% if request.endpoint == 'admin_site_config' %}active{% endif %}">
                             <i class="fas fa-cog nav-icon"></i>
                             Configurações
                         </a>
