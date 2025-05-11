@@ -2,8 +2,8 @@ import os
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db
-from models import User, Project, Service, Testimonial, ChatMessage
-from forms import LoginForm, RegistrationForm, ProfileForm, ProjectForm, ServiceForm, TestimonialForm, ChatMessageForm
+from models import User, Project, Service, Testimonial, ChatMessage, SiteConfig
+from forms import LoginForm, RegistrationForm, ProfileForm, ProjectForm, ServiceForm, TestimonialForm, ChatMessageForm, SiteConfigForm
 from urllib.parse import urlparse
 
 # Public routes
@@ -197,6 +197,61 @@ def send_message():
     db.session.commit()
     
     return jsonify(message.to_dict()), 201
+
+# Site configuration route
+@app.route('/admin/site-config', methods=['GET', 'POST'])
+@login_required
+def admin_site_config():
+    if not current_user.is_admin:
+        flash('Você não tem permissão para acessar esta página.', 'danger')
+        return redirect(url_for('index'))
+    
+    config = SiteConfig.get_settings()
+    form = SiteConfigForm()
+    
+    if form.validate_on_submit():
+        config.company_name = form.company_name.data
+        config.email = form.email.data
+        config.phone = form.phone.data
+        config.country = form.country.data
+        config.address = form.address.data
+        config.latitude = form.latitude.data
+        config.longitude = form.longitude.data
+        config.logo_url = form.logo_url.data
+        config.favicon_url = form.favicon_url.data
+        config.whatsapp = form.whatsapp.data
+        config.instagram = form.instagram.data
+        config.facebook = form.facebook.data
+        config.linkedin = form.linkedin.data
+        config.twitter = form.twitter.data
+        config.youtube = form.youtube.data
+        config.github = form.github.data
+        
+        db.session.commit()
+        flash('Configurações do site atualizadas com sucesso!', 'success')
+        return redirect(url_for('admin_site_config'))
+    
+    elif request.method == 'GET':
+        form.company_name.data = config.company_name
+        form.email.data = config.email
+        form.phone.data = config.phone
+        form.country.data = config.country
+        form.address.data = config.address
+        form.latitude.data = config.latitude
+        form.longitude.data = config.longitude
+        form.logo_url.data = config.logo_url
+        form.favicon_url.data = config.favicon_url
+        form.whatsapp.data = config.whatsapp
+        form.instagram.data = config.instagram
+        form.facebook.data = config.facebook
+        form.linkedin.data = config.linkedin
+        form.twitter.data = config.twitter
+        form.youtube.data = config.youtube
+        form.github.data = config.github
+    
+    return render_template('admin/site_config.html', 
+                          title='Configurações do Site - SeuCodigo',
+                          form=form)
 
 # Admin routes
 @app.route('/admin/dashboard')

@@ -71,3 +71,33 @@ class ChatMessage(db.Model):
             'read': self.read,
             'sender_name': self.sender.username
         }
+
+class SiteConfig(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_name = db.Column(db.String(120), nullable=False, default="SeuCodigo")
+    email = db.Column(db.String(120), nullable=False, default="contato@seucodigo.com.br")
+    phone = db.Column(db.String(20), default="+55 11 99999-9999")
+    country = db.Column(db.String(50), default="Brasil")
+    address = db.Column(db.Text, default="Av. Paulista, 1000 - São Paulo, SP")
+    latitude = db.Column(db.String(20), default="-23.5505")
+    longitude = db.Column(db.String(20), default="-46.6333")
+    logo_url = db.Column(db.String(255), default="/static/img/logo.png")
+    favicon_url = db.Column(db.String(255), default="/static/img/favicon.ico")
+    whatsapp = db.Column(db.String(20))
+    instagram = db.Column(db.String(120))
+    facebook = db.Column(db.String(120))
+    linkedin = db.Column(db.String(120))
+    twitter = db.Column(db.String(120))
+    youtube = db.Column(db.String(120))
+    github = db.Column(db.String(120))
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    
+    @classmethod
+    def get_settings(cls):
+        # Retorna as configurações existentes ou cria uma nova com valores padrão
+        config = cls.query.first()
+        if not config:
+            config = cls()
+            db.session.add(config)
+            db.session.commit()
+        return config

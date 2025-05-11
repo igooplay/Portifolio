@@ -56,3 +56,38 @@ class TestimonialForm(FlaskForm):
 class ChatMessageForm(FlaskForm):
     content = TextAreaField('Mensagem', validators=[DataRequired()])
     submit = SubmitField('Enviar')
+
+class SiteConfigForm(FlaskForm):
+    company_name = StringField('Nome da Empresa', validators=[DataRequired(), Length(max=120)])
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=120)])
+    phone = StringField('Telefone', validators=[DataRequired(), Length(max=20)])
+    country = SelectField('País', choices=[
+        ('Brasil', 'Brasil'),
+        ('Portugal', 'Portugal'),
+        ('Estados Unidos', 'Estados Unidos'),
+        ('Canadá', 'Canadá'),
+        ('Espanha', 'Espanha'),
+        ('França', 'França'),
+        ('Reino Unido', 'Reino Unido'),
+        ('Alemanha', 'Alemanha'),
+        ('Itália', 'Itália'),
+        ('Japão', 'Japão'),
+        ('China', 'China'),
+        ('Austrália', 'Austrália')
+    ])
+    address = TextAreaField('Endereço', validators=[DataRequired(), Length(max=255)])
+    latitude = StringField('Latitude', validators=[Optional(), Length(max=20)])
+    longitude = StringField('Longitude', validators=[Optional(), Length(max=20)])
+    logo_url = StringField('URL do Logo', validators=[Optional(), Length(max=255)])
+    favicon_url = StringField('URL do Favicon', validators=[Optional(), Length(max=255)])
+    
+    # Redes sociais
+    whatsapp = StringField('WhatsApp', validators=[Optional(), Length(max=20)])
+    instagram = StringField('Instagram', validators=[Optional(), Length(max=120)])
+    facebook = StringField('Facebook', validators=[Optional(), Length(max=120)])
+    linkedin = StringField('LinkedIn', validators=[Optional(), Length(max=120)])
+    twitter = StringField('Twitter', validators=[Optional(), Length(max=120)])
+    youtube = StringField('YouTube', validators=[Optional(), Length(max=120)])
+    github = StringField('GitHub', validators=[Optional(), Length(max=120)])
+    
+    submit = SubmitField('Salvar Configurações')
